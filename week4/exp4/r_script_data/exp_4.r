@@ -14,66 +14,12 @@ head(select(mydata, time.minutes,depth))
 head(mydata)
 min(select(mydata, oxygen))
 
-#simple data imports:
+# data for plots:
 station2 <- filter(mydata, station==2)
 station4 <- filter(mydata, station==4)
 station5 <- filter(mydata, station==5)
 station6 <- filter(mydata, station==6)
 station8 <- filter(mydata, station==8)
-
-#split up dataframe into the individual lines
-station2_10 <- filter(mydata, station==2 & depth=="10cm")
-station2_30 <- filter(mydata, station==2 & depth=="30cm")
-station2_50 <- filter(mydata, station==2 & depth=="50cm")
-station2_70 <- filter(mydata, station==2 & depth=="70cm")
-
-station4_10 <- filter(mydata, station==4 & depth=="10cm")
-station4_30 <- filter(mydata, station==4 & depth=="30cm")
-station4_50 <- filter(mydata, station==4 & depth=="50cm")
-station4_60 <- filter(mydata, station==4 & depth=="60cm")
-
-station5_10 <- filter(mydata, station==5 & depth=="10cm")
-station5_30 <- filter(mydata, station==5 & depth=="30cm")
-station5_50 <- filter(mydata, station==5 & depth=="50cm")
-station5_70 <- filter(mydata, station==5 & depth=="70cm")
-
-station6_10 <- filter(mydata, station==6 & depth=="10cm")
-station6_30 <- filter(mydata, station==6 & depth=="30cm")
-station6_50 <- filter(mydata, station==6 & depth=="50cm")
-station6_80 <- filter(mydata, station==6 & depth=="80cm")
-
-station8_sur <- filter(mydata, station==8 & depth=="0cm")
-station8_10 <- filter(mydata, station==8 & depth=="10cm")
-station8_30 <- filter(mydata, station==8 & depth=="30cm")
-station8_50 <- filter(mydata, station==8 & depth=="50cm")
-station8_80 <- filter(mydata, station==8 & depth=="80cm")
-
-#### linear regressions ####
-station2_10_reg <- lm(oxygen ~ time.hours, data=station2_10)
-station2_30_reg <- lm(oxygen ~ time.hours, data=station2_30)
-station2_50_reg <- lm(oxygen ~ time.hours, data=station2_50)
-station2_70_reg <- lm(oxygen ~ time.hours, data=station2_70)
-
-station4_10_reg <- lm(oxygen ~ time.hours, data=station4_10)
-station4_30_reg <- lm(oxygen ~ time.hours, data=station4_30)
-station4_50_reg <- lm(oxygen ~ time.hours, data=station4_50)
-station4_60_reg <- lm(oxygen ~ time.hours, data=station4_60)
-
-station5_10_reg <- lm(oxygen ~ time.hours, data=station5_10)
-station5_30_reg <- lm(oxygen ~ time.hours, data=station5_30)
-station5_50_reg <- lm(oxygen ~ time.hours, data=station5_50)
-station5_70_reg <- lm(oxygen ~ time.hours, data=station5_70)
-
-station6_10_reg <- lm(oxygen ~ time.hours, data=station6_10)
-station6_30_reg <- lm(oxygen ~ time.hours, data=station6_30)
-station6_50_reg <- lm(oxygen ~ time.hours, data=station6_50)
-station6_80_reg <- lm(oxygen ~ time.hours, data=station6_80)
-
-station8_sur_reg <- lm(oxygen ~ time.hours, data=station8_sur)
-station8_10_reg <- lm(oxygen ~ time.hours, data=station8_10)
-station8_30_reg <- lm(oxygen ~ time.hours, data=station8_30)
-station8_50_reg <- lm(oxygen ~ time.hours, data=station8_50)
-station8_80_reg <- lm(oxygen ~ time.hours, data=station8_80)
 
 #plots
 plot_station_2<- station2 %>%
@@ -133,9 +79,6 @@ plot(plot_station_5)
 plot(plot_station_6)
 plot(plot_station_8)
 
-
-# for surface in 8: #c0e105 or #e17202
-
 ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3/Spiekeroog_biogeo/week4/exp4/r_script_data/rate_plots/2.jpeg", 
        plot =  plot_station_2, width = 6, height = 4)
 ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3/Spiekeroog_biogeo/week4/exp4/r_script_data/rate_plots/4.jpeg", 
@@ -149,7 +92,6 @@ ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3
 
 ######## multiplot:
 #library(grid)
-
 multiplot <- function(..., plotlist=NULL, file, cols=2, layout= matrix(c(1,2,3,4,5,0), nrow=3, byrow=TRUE)) {
   require(grid)
   
@@ -187,3 +129,99 @@ multiplot <- function(..., plotlist=NULL, file, cols=2, layout= matrix(c(1,2,3,4
 }
 
 mult_plot <- multiplot(plot_station_2, plot_station_4, plot_station_5, plot_station_6, plot_station_8, cols=2)
+#export pdf using cairo-pdf
+
+#################### rate calculations: ################################
+
+#split up dataframe into the individual lines
+station2_10 <- filter(mydata, station==2 & depth=="10cm")
+station2_30 <- filter(mydata, station==2 & depth=="30cm")
+station2_50 <- filter(mydata, station==2 & depth=="50cm")
+station2_70 <- filter(mydata, station==2 & depth=="70cm")
+
+station4_10 <- filter(mydata, station==4 & depth=="10cm")
+station4_30 <- filter(mydata, station==4 & depth=="30cm")
+station4_50 <- filter(mydata, station==4 & depth=="50cm")
+station4_60 <- filter(mydata, station==4 & depth=="60cm")
+
+station5_10 <- filter(mydata, station==5 & depth=="10cm")
+station5_30 <- filter(mydata, station==5 & depth=="30cm")
+station5_50 <- filter(mydata, station==5 & depth=="50cm")
+station5_70 <- filter(mydata, station==5 & depth=="70cm")
+
+station6_10 <- filter(mydata, station==6 & depth=="10cm")
+station6_30 <- filter(mydata, station==6 & depth=="30cm")
+station6_50 <- filter(mydata, station==6 & depth=="50cm")
+station6_80 <- filter(mydata, station==6 & depth=="80cm")
+
+station8_sur <- filter(mydata, station==8 & depth=="0cm")
+station8_10 <- filter(mydata, station==8 & depth=="10cm")
+station8_30 <- filter(mydata, station==8 & depth=="30cm")
+station8_50 <- filter(mydata, station==8 & depth=="50cm")
+station8_80 <- filter(mydata, station==8 & depth=="80cm")
+
+#### linear regressions ####
+station2_10_reg <- lm(oxygen ~ time.hours, data=station2_10)
+station2_30_reg <- lm(oxygen ~ time.hours, data=station2_30)
+station2_50_reg <- lm(oxygen ~ time.hours, data=station2_50)
+station2_70_reg <- lm(oxygen ~ time.hours, data=station2_70)
+
+station4_10_reg <- lm(oxygen ~ time.hours, data=station4_10)
+station4_30_reg <- lm(oxygen ~ time.hours, data=station4_30)
+station4_50_reg <- lm(oxygen ~ time.hours, data=station4_50)
+station4_60_reg <- lm(oxygen ~ time.hours, data=station4_60)
+
+station5_10_reg <- lm(oxygen ~ time.hours, data=station5_10)
+station5_30_reg <- lm(oxygen ~ time.hours, data=station5_30)
+station5_50_reg <- lm(oxygen ~ time.hours, data=station5_50)
+station5_70_reg <- lm(oxygen ~ time.hours, data=station5_70)
+
+station6_10_reg <- lm(oxygen ~ time.hours, data=station6_10)
+station6_30_reg <- lm(oxygen ~ time.hours, data=station6_30)
+station6_50_reg <- lm(oxygen ~ time.hours, data=station6_50)
+station6_80_reg <- lm(oxygen ~ time.hours, data=station6_80)
+
+station8_sur_reg <- lm(oxygen ~ time.hours, data=station8_sur)
+station8_10_reg <- lm(oxygen ~ time.hours, data=station8_10)
+station8_30_reg <- lm(oxygen ~ time.hours, data=station8_30)
+station8_50_reg <- lm(oxygen ~ time.hours, data=station8_50)
+station8_80_reg <- lm(oxygen ~ time.hours, data=station8_80)
+
+#cat together all the regression objects as a matrix
+matrix_of_regressions <- cbind(
+  station2_10_reg,
+  station2_30_reg,
+  station2_50_reg,
+  station2_70_reg,
+  station4_10_reg,
+  station4_30_reg,
+  station4_50_reg,
+  station4_60_reg,
+  station5_10_reg,
+  station5_30_reg,
+  station5_50_reg,
+  station5_70_reg,
+  station6_10_reg,
+  station6_30_reg,
+  station6_50_reg,
+  station6_80_reg,
+  station8_sur_reg,
+  station8_10_reg,
+  station8_30_reg,
+  station8_50_reg,
+  station8_80_reg
+)
+#take the regression values out of the matrix of lm objects
+regression_values <- 
+  as.data.frame(t(as.data.frame(matrix_of_regressions[1,]))) %>% select(time.hours)
+
+# extract the sample names from the large dataframe
+samples <- mydata %>% distinct(station, depth)
+
+# make the table of rates
+rates_table <- cbind(samples, regression_values)
+
+rates_table <- rename(rates_table, oxygen_consumption_rate_uM_per_h = time.hours)
+
+#write out to csv
+write.csv(rates_table, file = "July_Spiekeroog_rates.csv", row.names = FALSE)
