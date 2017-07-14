@@ -125,10 +125,74 @@ mult_plot <- multiplot(plot_beach_above_mwl,plot_lagoon,plot_berm,plot_low_water
 #export pdf using cairo-pdf
 
 
+#################### rate calculations: ################################
+
+#split up dataframe into the individual lines
+beach_above_mwl_0 <- filter(mydata, station==2, oxygen > 10)
+
+lagoon_0 <- filter(mydata, station==3 & depth=="0cm", oxygen > 10)
+lagoon_30 <- filter(mydata, station==143 & depth=="30cm", oxygen > 10)
+lagoon_50 <- filter(mydata, station==143 & depth=="50cm", oxygen > 10)
+lagoon_100 <- filter(mydata, station==143 & depth=="100cm", oxygen > 10)
+
+berm_0 <- filter(mydata, station==4 & depth=="0cm", oxygen > 10)
+berm_30 <- filter(mydata, station==164 & depth=="30cm", oxygen > 10)
+berm_50 <- filter(mydata, station==164 & depth=="50cm", oxygen > 10)
+berm_100 <- filter(mydata, station==164 & depth=="100cm", oxygen > 10)
+
+low_water_line_0 <- filter(mydata, station==5 & depth=="0cm", oxygen > 10)
+low_water_line_30 <- filter(mydata, station==169 & depth=="30cm", oxygen > 10)
+low_water_line_50 <- filter(mydata, station==169 & depth=="50cm", oxygen > 10)
+low_water_line_100 <- filter(mydata, station==169 & depth=="100cm", oxygen > 10)
+
+#### linear regressions ####
+beach_above_mwl_0_reg <-lm(oxygen~time.hours, data=beach_above_mwl_0)
+
+lagoon_0_reg <-lm(oxygen~time.hours, data=lagoon_0)
+lagoon_30_reg <-lm(oxygen~time.hours, data=lagoon_30)
+lagoon_50_reg <-lm(oxygen~time.hours, data=lagoon_50)
+lagoon_100_reg <-lm(oxygen~time.hours, data=lagoon_100)
+
+berm_0_reg <-lm(oxygen~time.hours, data=berm_0)
+berm_30_reg <-lm(oxygen~time.hours, data=berm_30)
+berm_50_reg <-lm(oxygen~time.hours, data=berm_50)
+berm_100_reg <-lm(oxygen~time.hours, data=berm_100)
+
+low_water_line_0_reg <-lm(oxygen~time.hours, data=low_water_line_0)
+low_water_line_30_reg <-lm(oxygen~time.hours, data=low_water_line_30)
+low_water_line_50_reg <-lm(oxygen~time.hours, data=low_water_line_50)
+low_water_line_100_reg <-lm(oxygen~time.hours, data=low_water_line_100)
 
 
+#cat together all the regression objects as a matrix
+matrix_of_regressions <- cbind(
+  beach_above_mwl_0_reg,
+  lagoon_0_reg,
+  lagoon_30_reg,
+  lagoon_50_reg,
+  lagoon_100_reg,
+  berm_0_reg,
+  berm_30_reg,
+  berm_50_reg,
+  berm_100_reg,
+  low_water_line_0_reg,
+  low_water_line_30_reg,
+  low_water_line_50_reg,
+  low_water_line_100_reg
+)
+#take the regression values out of the matrix of lm objects
+regression_values <- 
+  as.data.frame(t(as.data.frame(matrix_of_regressions[1,]))) %>% select(time.hours)
 
+# extract the sample names from the large dataframe
+samples <- mydata %>% distinct(station, depth)
 
+# make the table of rates
+rates_table <- cbind(samples, regression_values)
 
+rates_table <- rename(rates_table, oxygen_consumption_rate_uM_per_h = time.hours)
+
+#write out to csv *don't run again I manually added the labels to the csv
+#write.csv(rates_table, file = "March_Spiekeroog_rates.csv", row.names = FALSE)
 
 

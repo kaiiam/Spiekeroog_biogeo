@@ -1,0 +1,14 @@
+station,depth,label,oxygen_consumption_rate_uM_per_h
+2,0cm,beach_above_mwl,-5.6523427049
+3,0cm,lagoon,-4.6928068209
+143,30cm,lagoon,-5.7621319352
+143,50cm,lagoon,-6.6924528026
+143,100cm,lagoon,-6.76130212
+4,0cm,berm,-3.6236829624
+164,30cm,berm,-3.8180664928
+164,50cm,berm,-6.6418338895
+164,100cm,berm,-11.527374798
+5,0cm,low_water_line,-4.4401682322
+169,30cm,low_water_line,-7.0930453533
+169,50cm,low_water_line,-10.0863866312
+169,100cm,low_water_line,-15.8836087062
