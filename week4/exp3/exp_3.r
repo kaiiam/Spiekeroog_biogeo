@@ -21,9 +21,16 @@ berm <- mutate(berm, depth = factor(depth , levels = c('0cm', '30cm', '50cm', '1
 low_water_line <- mutate(low_water_line, depth = factor(depth , levels = c('0cm', '30cm', '50cm', '100cm')))
 
 #exclude values which are less than 10μM in the regressions
-lagoon_reg <- filter(lagoon, oxygen > 10)
-berm_reg <- filter(berm, oxygen > 10)
-low_water_line_reg <- filter(low_water_line, oxygen > 10)
+beach_above_mwl_reg <- filter(beach_above_mwl, oxygen > 10, time.minutes >= 135 )
+lagoon_reg <- filter(lagoon, oxygen > 10, time.minutes >= 135)
+berm_reg <- filter(berm, oxygen > 10, time.minutes >= 137)
+low_water_line_reg <- filter(low_water_line, oxygen > 10,
+                             
+                             depth=="0cm" & time.minutes >= 172 |
+                             depth=="30cm" & time.minutes >= 207 |
+                             depth=="50cm" & time.minutes >= 140 |
+                             depth=="100cm" & time.minutes >= 64
+                             )
 
 #plots
 plot_beach_above_mwl<- beach_above_mwl %>%
@@ -32,7 +39,7 @@ plot_beach_above_mwl<- beach_above_mwl %>%
   theme_light() +
   scale_x_continuous("Time (h)") +
   scale_y_continuous(expression(paste("Oxygen (μmol l"^"-1" *")" )), limits = c(0, 250)) +
-  geom_smooth(se = FALSE, method = "lm") +
+  geom_smooth(data=beach_above_mwl_reg, se = FALSE, method = "lm") +
   ggtitle("Beach above Mean Water Line") + theme(plot.title = element_text(hjust = 0.5)) +
   labs(colour ="Depth") + scale_colour_manual(values = c("#ecd240", "#ff8811", "#f12700", "#972e23"))
 
@@ -85,7 +92,7 @@ ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3
 
 ######## multiplot:
 #library(grid)
-multiplot <- function(..., plotlist=NULL, file, cols=2, layout= matrix(c(1,2,3,4), nrow=2, byrow=TRUE)) {
+multiplot <- function(..., plotlist=NULL, file, cols=2, layout= matrix(c(1,2,3,4,0,0), nrow=3, byrow=TRUE)) {
   require(grid)
   
   # Make a list from the ... arguments and plotlist
@@ -128,22 +135,22 @@ mult_plot <- multiplot(plot_beach_above_mwl,plot_lagoon,plot_berm,plot_low_water
 #################### rate calculations: ################################
 
 #split up dataframe into the individual lines
-beach_above_mwl_0 <- filter(mydata, station==2, oxygen > 10)
+beach_above_mwl_0 <- filter(beach_above_mwl_reg, station==2, oxygen > 10)
 
-lagoon_0 <- filter(mydata, station==3 & depth=="0cm", oxygen > 10)
-lagoon_30 <- filter(mydata, station==143 & depth=="30cm", oxygen > 10)
-lagoon_50 <- filter(mydata, station==143 & depth=="50cm", oxygen > 10)
-lagoon_100 <- filter(mydata, station==143 & depth=="100cm", oxygen > 10)
+lagoon_0 <- filter(lagoon_reg, station==3 & depth=="0cm", oxygen > 10)
+lagoon_30 <- filter(lagoon_reg, station==143 & depth=="30cm", oxygen > 10)
+lagoon_50 <- filter(lagoon_reg, station==143 & depth=="50cm", oxygen > 10)
+lagoon_100 <- filter(lagoon_reg, station==143 & depth=="100cm", oxygen > 10)
 
-berm_0 <- filter(mydata, station==4 & depth=="0cm", oxygen > 10)
-berm_30 <- filter(mydata, station==164 & depth=="30cm", oxygen > 10)
-berm_50 <- filter(mydata, station==164 & depth=="50cm", oxygen > 10)
-berm_100 <- filter(mydata, station==164 & depth=="100cm", oxygen > 10)
+berm_0 <- filter(berm_reg, station==4 & depth=="0cm", oxygen > 10)
+berm_30 <- filter(berm_reg, station==164 & depth=="30cm", oxygen > 10)
+berm_50 <- filter(berm_reg, station==164 & depth=="50cm", oxygen > 10)
+berm_100 <- filter(berm_reg, station==164 & depth=="100cm", oxygen > 10)
 
-low_water_line_0 <- filter(mydata, station==5 & depth=="0cm", oxygen > 10)
-low_water_line_30 <- filter(mydata, station==169 & depth=="30cm", oxygen > 10)
-low_water_line_50 <- filter(mydata, station==169 & depth=="50cm", oxygen > 10)
-low_water_line_100 <- filter(mydata, station==169 & depth=="100cm", oxygen > 10)
+low_water_line_0 <- filter(low_water_line_reg, station==5 & depth=="0cm", oxygen > 10)
+low_water_line_30 <- filter(low_water_line_reg, station==169 & depth=="30cm", oxygen > 10)
+low_water_line_50 <- filter(low_water_line_reg, station==169 & depth=="50cm", oxygen > 10)
+low_water_line_100 <- filter(low_water_line_reg, station==169 & depth=="100cm", oxygen > 10)
 
 #### linear regressions ####
 beach_above_mwl_0_reg <-lm(oxygen~time.hours, data=beach_above_mwl_0)
@@ -193,6 +200,6 @@ rates_table <- cbind(samples, regression_values)
 rates_table <- rename(rates_table, oxygen_consumption_rate_uM_per_h = time.hours)
 
 #write out to csv *don't run again I manually added the labels to the csv
-#write.csv(rates_table, file = "March_Spiekeroog_rates.csv", row.names = FALSE)
+#write.csv(rates_table, file = "March_Spiekeroog_rates_2.csv", row.names = FALSE)
 
 
