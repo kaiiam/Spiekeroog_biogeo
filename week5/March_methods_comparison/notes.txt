@@ -1,0 +1,3 @@
+comparison of flow through reactors (old method) with exetainer optodes (new method)
+
+make into histogram

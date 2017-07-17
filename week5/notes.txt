@@ -1,0 +1,31 @@
+Hi Kai,
+
+attached all the files you need. 
+
+BimeMarch2017.xlsx: Results of Flow through reactor experiments
+
+Bime illustration: Some more figures
+
+
+
+
+
+contStat_processed: The continuous measurement with non-moving exetainer
+
+contStatUpsideDown: Continouse measurement with measurement in head volume (water)
+
+contWheel: Continuouse measurement while the exetainer was attached to wheel.
+
+
+Oxygen_transectMarch: The Oxygen measurements from our march campagne (you don't neccessarily need to redo the graphic from yanis)
+
+Soeren_Topography_GPS_March: The gps positions from the march campagne.
+
+
+GPSPositions_Soeren_July: GPS Positions of our stations from the March campagne
+
+Cheers,
+
+
+Soeren
+
