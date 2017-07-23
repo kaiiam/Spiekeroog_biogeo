@@ -11,7 +11,7 @@ march_plot <- ggplot(march_data, aes(site, O2_rate_µM_h, fill = Method)) +
               geom_bar(stat="identity", position = "dodge") + 
               theme_linedraw() +
               scale_fill_brewer(palette = "Set1") +
-              ylab(expression(paste("Oxygen consumption (μmol l"^"-1" * "h"^"-1"* ")" ))) +
+              ylab(expression(paste("Oxygen Consumption Rate (μmol l"^"-1" * "h"^"-1"* ")" ))) +
               geom_text(aes(label = O2_rate_µM_h),
               position = position_dodge(width = 0.9), vjust=-0.2) 
 

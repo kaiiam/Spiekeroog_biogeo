@@ -74,7 +74,7 @@ july_plot <- ggplot(july_data, aes(Method, O2_rate_µM_h_corrected, fill = setup
              geom_bar(stat="identity", position = "dodge",width = 0.5) + 
              theme_linedraw() +
              scale_fill_brewer(palette = "Dark2") +
-             ylab(expression(paste("Oxygen consumption (μmol l"^"-1" * "h"^"-1"* ")" ))) +
+             ylab(expression(paste("Oxygen Consumption Rate (μmol l"^"-1" * "h"^"-1"* ")" ))) +
              geom_text(aes(label = O2_rate_µM_h_corrected),
              position = position_dodge(width = 0.9), vjust=-0.2) 
 
