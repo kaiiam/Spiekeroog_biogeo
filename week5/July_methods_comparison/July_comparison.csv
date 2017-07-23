@@ -1,5 +1,5 @@
-Method,rate_uncorrected,sediment volume,O2_rate_µM_h-1_corrected,
-continuous_stationary,-36.797522,7.3,-60.4890772603,
-continuous_stationary_upside_down,-4.394662,7.3,-7.2241019178,
-continuous_wheel,-34.964464,7.3,-57.4758312329,
-time_points,-21.4916848101,7.3,-35.3287969481,0.6146722229
+Method1,rate_uncorrected,sediment volume,O2_rate_µM_h_corrected,setup,Method
+Continuous Stationary,-36.797522,7.3,-60.4890772603,Continuous ,Stationary
+Continuous Stationary Upside Down,-4.394662,7.3,-7.2241019178,Continuous ,Inverted Stationary
+Continuous Wheel,-34.964464,7.3,-57.4758312329,Continuous ,Wheel
+Time Points,-21.4916848101,7.3,-35.3287969481,Noncontinuous,Time Points

@@ -1,7 +1,7 @@
-Method,site,O2_rate_µM_h-1
-Flow_reactor,Low_Water_Line,16.6
-Flow_reactor,Seep,6.6
-Flow_reactor,Lagoon,11.6
-exetainer,Low_Water_Line,9.0
-exetainer,Seep,4.4
-exetainer,Lagoon,6.8
+Method,site,O2_rate_µM_h
+Flow Through Reactor,Low Water Line,16.6
+Flow Through Reactor,Seep,6.6
+Flow Through Reactor,Lagoon,11.6
+Exetainer,Low Water Line,9.0
+Exetainer,Seep,4.4
+Exetainer,Lagoon,6.8

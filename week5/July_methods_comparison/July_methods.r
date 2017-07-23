@@ -62,3 +62,28 @@ matrix_of_regressions <- cbind(
 regression_values <- 
   as.data.frame(t(as.data.frame(matrix_of_regressions[1,]))) %>% select(time.hours)
 
+# bar plot figure:
+
+july_data <- read.csv(file = "July_comparison.csv",header = TRUE)
+
+july_data <- mutate(july_data, O2_rate_µM_h_corrected = abs(round(O2_rate_µM_h_corrected, digits = 1)) )
+
+july_data$Method <- factor(july_data$Method, levels = c("Stationary",  "Wheel","Inverted Stationary", "Time Points"))# %>% .$Method)
+
+july_plot <- ggplot(july_data, aes(Method, O2_rate_µM_h_corrected, fill = setup)) + 
+             geom_bar(stat="identity", position = "dodge",width = 0.5) + 
+             theme_linedraw() +
+             scale_fill_brewer(palette = "Dark2") +
+             ylab(expression(paste("Oxygen consumption (μmol l"^"-1" * "h"^"-1"* ")" ))) +
+             geom_text(aes(label = O2_rate_µM_h_corrected),
+             position = position_dodge(width = 0.9), vjust=-0.2) 
+
+
+july_plot
+
+ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3/Spiekeroog_biogeo/week5/July_methods_comparison/July_methods_comparison.jpeg", 
+       plot =  july_plot, width = 6, height = 4)
+
+
+
+
