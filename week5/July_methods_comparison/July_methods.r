@@ -54,19 +54,9 @@ cont_wheel_reg <-lm(oxygen~time.hours, data=cont_wheel)
 
 #cat together all the regression objects as a matrix
 matrix_of_regressions <- cbind(
-  beach_above_mwl_0_reg,
-  lagoon_0_reg,
-  lagoon_30_reg,
-  lagoon_50_reg,
-  lagoon_100_reg,
-  berm_0_reg,
-  berm_30_reg,
-  berm_50_reg,
-  berm_100_reg,
-  low_water_line_0_reg,
-  low_water_line_30_reg,
-  low_water_line_50_reg,
-  low_water_line_100_reg
+  cont_stat_reg,
+  cont_stat_upside_down_reg,
+  cont_wheel_reg
 )
 #take the regression values out of the matrix of lm objects
 regression_values <- 
