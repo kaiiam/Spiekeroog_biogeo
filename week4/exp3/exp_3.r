@@ -202,4 +202,12 @@ rates_table <- rename(rates_table, oxygen_consumption_rate_uM_per_h = time.hours
 #write out to csv *don't run again I manually added the labels to the csv
 #write.csv(rates_table, file = "March_Spiekeroog_rates_2.csv", row.names = FALSE)
 
+# # different attempt to multiplot
+# #install.packages("sjPlot")
+# #from https://rdrr.io/cran/sjPlot/man/plot_grid.html 
+# library(sjPlot)
+# 
+# x= c(plot_beach_above_mwl, plot_lagoon, plot_berm, plot_low_water_line)
+# 
+# sjPlot::plot_grid(x)
 

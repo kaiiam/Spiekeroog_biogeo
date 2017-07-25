@@ -26,7 +26,7 @@ winter_summer_plot <- data %>%
   theme_linedraw() +
   geom_boxplot() +
   geom_jitter(width = 0.2) +
-  ylab(expression(paste("Oxygen Consumption Rate (μmol l"^"-1" * "h"^"-1"* ")" ))) +
+  ylab(expression(paste("Respiration (μmol l"^"-1" * "h"^"-1"* ")" ))) +
   xlab("Season") +
   facet_grid(. ~ Month , scales = "free", space = "free")
 
@@ -62,7 +62,7 @@ depths_plot <- data %>%
   theme_linedraw() +
   geom_boxplot() +
   geom_jitter(width = 0.2) +
-  ylab(expression(paste("Oxygen Consumption Rate (μmol l"^"-1" * "h"^"-1"* ")" ))) +
+  ylab(expression(paste("Respiration (μmol l"^"-1" * "h"^"-1"* ")" ))) +
   xlab("Depth (cm)") +
   facet_grid(. ~ Month , scales = "free", space = "free")
 

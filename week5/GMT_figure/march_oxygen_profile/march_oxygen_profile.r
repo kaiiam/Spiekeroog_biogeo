@@ -17,86 +17,33 @@ min_x <- min(march_oxygen_profile_test$x)
 
 #get x coordinantes for the grid
 max_x <- max(march_oxygen_profile_test$x) - min_x
-x.range <- as.numeric(c(0, max_x))
 
-#make numeric vector of x coordinantes
-x_coors = seq(from = x.range[1], to = x.range[2], by = 0.5)
+march_oxygen_profile  <- march_oxygen_profile %>% mutate(x= x - min_x )
+march_oxygen_profile_test <- mutate(march_oxygen_profile_test, x= x-min_x )
+
+min_x <- 0
+min_y <- min(march_oxygen_profile_test$y) - 0.1
+max_y <- max(march_oxygen_profile_test$y) + 0.1
 
 #get y coordinates for the grid do so by modeling both the top and bottom lines
 #with a function describing the slope of the beach 
 
 #model top line
 top <- filter(march_oxygen_profile_test, depth ==10)
-top <- mutate(top, x1 = x - min_x)
+#top <- mutate(top, x1 = x - min_x)
 
 #model top line with loess function
-loess_top <- loess(y ~ x1, data = select(top, x1, y))
-
-#function to get y_coordinates from loess model using the x_coors vector
-y_top_coors <- predict(loess_top, x_coors)
-
-# #plot to visualize
-# plot(top$x1, top$y)
-# lines(top$x1, predict(loess_top), col = "blue")
-# points(x_coors, y_top_coors)
+loess_top <- loess(y ~ x, data = select(top, x, y))
 
 #model bottom line:
 bottom <- filter(march_oxygen_profile_test, depth ==100)
-bottom <- mutate(bottom, x1 = x - min_x)
+#bottom <- mutate(bottom, x1 = x - min_x)
 
 #model bottom with loess function
-loess_bottom <- loess(y ~ x1, data = select(bottom, x1, y))
-
-#function to get y_coordinates from loess model using the x_coors vector
-y_bottom_coors <- predict(loess_bottom, x_coors)
-
-# #plot to visualize not necessary
-# plot(bottom$x1, bottom$y)
-# lines(bottom$x1, predict(loess_bottom), col = "blue")
-# points(x_coors, y_bottom_coors)
-
-#having the top y and x coors each a vector we need to generate the inbetween 
-#y values, all of which correspond to the existing x coordinantes. 
-
-df <- as.data.frame(rbind(x_coors, y_top_coors,y_bottom_coors)) 
-
-#df <- df %>% mutate(diff_top_bottom = y_top_coors - y_bottom_coors)
-
-# need to do the following line, for each pair in y_bottom_coors y_top_coors
-#y.range <- as.numeric(c(-1.3315, 1.0653))
-#y = seq(from = y.range[1], to = y.range[2], by = 0.1)
-
-matrix <- as.matrix(rbind(y_top_coors,y_bottom_coors))
-
-#apply(obj, num, )  num rows is 1 columns is 2 
-#so well do wide formate and apply across each column
-
-y_coor_generator <- function(x, matrix) {
-  y = seq(from = x[2], to = x[1], by = 0.01 )#change the by to get smaller increments
-  return(rev(y))
-}
-y_out <- apply(matrix,2 ,FUN=function(x) y_coor_generator(x)  )
-
-y_out <- t(y_out)
-y_out <- as.data.frame(cbind(x_coors,y_out))
-
-#first iteration:
-init <- select(y_out,x_coors, y=V2)
-
-#start for loop here i in 3:11
-for (i in 3:92) {
-  tmp <- select(y_out,x_coors, y= i)
-  init <- bind_rows(init, tmp)
-}
+loess_bottom <- loess(y ~ x, data = select(bottom, x, y))
 
 # In order to deal with the oxygen values we need to filter NA's
-march_oxygen_profile_test <- drop_na(march_oxygen_profile_test) # %>% drop_na()
-
-#plot(march_oxygen_profile_test)
-#min(march_oxygen_profile$x) # 5959887
-#max(march_oxygen_profile$x) #5959929
-#min(march_oxygen_profile$y) # -1.3315
-#max(march_oxygen_profile$y) # 1.0653
+march_oxygen_profile_test <- drop_na(march_oxygen_profile_test) 
 
 #Create a data frame from all combinations of the supplied vectors or factors. 
 #See the description of the return value for precise details of the way this is done.
@@ -106,89 +53,150 @@ march_oxygen_profile_test <- drop_na(march_oxygen_profile_test) # %>% drop_na()
 # the y I've set to 0.05 (5cm intervals)
 #could change if necessary
 
-
-
 ####original grid
-x.range <- as.numeric(c(5959887, 5959929))  # min/max longitude of the interpolation area
-y.range <- as.numeric(c(-1.3315, 1.0653))  # min/max latitude of the interpolation area
-grd <- expand.grid(x = seq(from = x.range[1], to = x.range[2], by = 0.1),
-                   y = seq(from = y.range[1], to = y.range[2], by = 0.1))
+x.range <- as.numeric(c(min_x, max_x))  # min/max longitude of the interpolation area
+y.range <- as.numeric(c(min_y, max_y))  # min/max latitude of the interpolation area
 
-# ####my funky grid
-# grd <- init %>% rename(x = x_coors)
-# grd <- grd %>% mutate(x = x + min_x)
+#changes the by to something like 0.01 to get higher resolution
+grd <- expand.grid(x = seq(from = x.range[1], to = x.range[2], by = 0.02),
+                   y = seq(from = y.range[1], to = y.range[2], by = 0.00124))
+
+length(seq(from = x.range[1], to = x.range[2], by = 0.02))
+length(seq(from = y.range[1], to = y.range[2], by = 0.00124))
 
 # expand points to grid
 coordinates(grd) <- ~x + y
 gridded(grd) <- TRUE
-
-#http://www.maths.lancs.ac.uk/~rowlings/Teaching/Sheffield2013/spatialstats.html has a wierd shaped grid try to emulate
-
-## help from http://grokbase.com/t/r/r-sig-geo/141v3bszry/can-coordinate-intervals-be-not-constant-in-spatialpixelsdataframe-object
-#try to figure out the whole sp SpatialPixelDF stuff and figure out how to coherce the grid together via the tolerance function.
-delmepx <- SpatialPixelsDataFrame(march_oxygen_profile_test, data=grd, tolerance=0.618392)
-delmepol <- as(delmepx,"SpatialPolygonsDataFrame")
-delmepx2 <- SpatialPixelsDataFrame(coordinates(delmepol), delmepol at data)
-
-#resp
-fullgrid(delmepx)=TRUE
-#or alternatively
-delmepx = as(delmepx, "SpatialGridDataFrame")
-##
-
-
-#don't need this it was just to visualize the grid
-plot(grd, cex = 1.5, col = "grey")
-points(march_oxygen_profile_test, pch = 1, col = "red", cex = 1)
 
 #sp::coordinates	set spatial coordinates to create a Spatial object, or
 #retrieve spatial coordinates from a Spatial object
 #now made it into a "SpatialPointsDataFrame"
 coordinates(march_oxygen_profile_test) = ~x + y
 
-#Interpolate surface and fix the output:
-#this makes the interpolated data points between the actual values over the grid
-#I'll need to find a way of removing the values of var1.pred which are above the transect line
-
-#march_oxygen_profile_test <- na.omit(march_oxygen_profile_test)
-#needed to drop the NAs before this worked
 idw <- idw(formula = oxygen ~ 1, locations = march_oxygen_profile_test, 
            newdata = grd)  # apply idw model for the data
 
 idw.output = as.data.frame(idw)  # output is defined as a data table
 names(idw.output)[1:3] <- c("long", "lat", "var1.pred")  # give names to the modelled variables
 
+#function to get y_coordinates from loess model using the x_coors vector
+#filter values above and below beach
+y_top_coors <- predict(loess_top, idw.output$long) + 0.1
+y_bottom_coors <- predict(loess_bottom, idw.output$long) - 0.1
 
-#adapt from this with the est_contour
-ggplot() + geom_tile(data = idw.output, alpha = 0.8, aes(x = long, y = lat, 
-                                                         fill = round(var1.pred, 0))) +
+idw.output <- cbind(idw.output, y_top_coors,y_bottom_coors)
+idw.output <- idw.output %>% filter(lat <= y_top_coors & lat >= y_bottom_coors )
 
- scale_fill_gradientn(colours = rev(rainbow(6) )) +
+#2 new ideas 1) set background colour though theme_light(color = "blue") or somehow
+#            2) filter idw.output for values within range of black boxes (dicated by functions)
+# polygon from http://sape.inf.usi.ch/quick-reference/ggplot2/geom_polygon
+# annotation https://stackoverflow.com/questions/15903868/draw-multiple-squares-with-ggplot
+# geom http://sape.inf.usi.ch/quick-reference/ggplot2/geom
 
-#+ scale_fill_gradient(low = "blue", high = "red") 
-geom_point(data = march_oxygen_profile, aes(x = x, y = y), shape = 0, 
-             colour = "black") + labs(fill = expression(paste("Oxygen (μmol l"^"-1" *")" )), title = "March Spiekeroog Oxygen Transect")
+#plot countour figure
+p <- ggplot() + 
+  
+  annotate("polygon",
+           x= c(min(idw.output$long),min((idw.output$long)),max((idw.output$long))),
+           y=c(min(idw.output$lat),max(idw.output$lat),min(idw.output$lat)),
+           fill="#e4dcac", alpha=1) +
+  annotate("polygon",
+           x= c(min(idw.output$long),max(idw.output$long),max(idw.output$long)),
+           y=c(max(idw.output$lat),min(idw.output$lat),max(idw.output$lat)),
+           fill="#B0C0D9", alpha=1) +
+  
+  ylab("Elevation (m)") +
+  xlab("Distance (m) ") +
+  geom_tile(data = idw.output, alpha = 1,
+                     aes(x = long, y = lat, fill = round(var1.pred, 0))) +
+
+  scale_fill_gradientn(colours = rev(rainbow(6) )) +
+  
+  #ggtitle("March Spiekeroog Oxygen Transect") + 
+  theme(plot.title = element_text(lineheight=.8, face="bold", hjust = 0.5)) +
+  
+  #+ scale_fill_gradient(low = "blue", high = "red")
+  geom_point(data = march_oxygen_profile, aes(x = x, y = y), shape = 0,
+             colour = "black") + labs(fill = expression(paste("Oxygen (μmol l"^"-1" *")" )))
+p
+
+ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3/Spiekeroog_biogeo/week5/GMT_figure/march_oxygen_profile/March_oxygen_profile.jpeg", 
+       plot =  p, width = 6, height = 4)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# #working old don't mess with
+# #plot countour figure
+# ggplot() + geom_tile(data = idw.output, alpha = 0.8,
+#                      aes(x = long, y = lat, fill = round(var1.pred, 0))) +
+# 
+#   scale_fill_gradientn(colours = rev(rainbow(6) )) +
+# 
+#   #+ scale_fill_gradient(low = "blue", high = "red")
+#   geom_point(data = march_oxygen_profile, aes(x = x, y = y), shape = 0,
+#              colour = "black") + labs(fill = expression(paste("Oxygen (μmol l"^"-1" *")" )), title = "March Spiekeroog Oxygen Transect")
 
 
 
 ###### old #########
+#http://www.maths.lancs.ac.uk/~rowlings/Teaching/Sheffield2013/spatialstats.html has a wierd shaped grid try to emulate
+
+# ## help from http://grokbase.com/t/r/r-sig-geo/141v3bszry/can-coordinate-intervals-be-not-constant-in-spatialpixelsdataframe-object
+# #try to figure out the whole sp SpatialPixelDF stuff and figure out how to coherce the grid together via the tolerance function.
+# delmepx <- SpatialPixelsDataFrame(march_oxygen_profile_test, data=grd, tolerance=0.618392)
+# delmepol <- as(delmepx,"SpatialPolygonsDataFrame")
+# delmepx2 <- SpatialPixelsDataFrame(coordinates(delmepol), delmepol at data)
+# 
+# #resp
+# fullgrid(delmepx)=TRUE
+# #or alternatively
+# delmepx = as(delmepx, "SpatialGridDataFrame")
+# ##
+
+# #plot to visualize not necessary
+# plot(bottom$x1, bottom$y)
+# lines(bottom$x1, predict(loess_bottom), col = "blue")
+# points(x_coors, y_bottom_coors)
+
+#having the top y and x coors each a vector we need to generate the inbetween 
+#y values, all of which correspond to the existing x coordinantes. 
+
+#df <- as.data.frame(rbind(x_coors, y_top_coors,y_bottom_coors)) 
+
+#df <- df %>% mutate(diff_top_bottom = y_top_coors - y_bottom_coors)
+
+# need to do the following line, for each pair in y_bottom_coors y_top_coors
+#y.range <- as.numeric(c(-1.3315, 1.0653))
+#y = seq(from = y.range[1], to = y.range[2], by = 0.1)
+
+#matrix <- as.matrix(rbind(y_top_coors,y_bottom_coors))
+
+#apply(obj, num, )  num rows is 1 columns is 2 
+#so well do wide formate and apply across each column
+
+# #change the by to get smaller increments
+# y_coor_generator <- function(x, matrix) {
+#   y = seq(from = x[2], to = x[1], by = 0.01 )
+#   return(rev(y))
+# }
+# y_out <- apply(matrix,2 ,FUN=function(x) y_coor_generator(x)  )
+# 
+# y_out <- t(y_out)
+# y_out <- as.data.frame(cbind(x_coors,y_out))
+
+# #first iteration:
+# init <- select(y_out,x_coors, y=V2)
+# 
+# #start for loop here i in 3:11
+# for (i in 3:92) {
+#   tmp <- select(y_out,x_coors, y= i)
+#   init <- bind_rows(init, tmp)
+# }
+
+
+
+
+
+
 #old july 20th
 
 tmp <- select(y_out,x_coors, y=V4)
