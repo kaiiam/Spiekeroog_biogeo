@@ -122,7 +122,7 @@ p <- ggplot() +
 p
 
 ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3/Spiekeroog_biogeo/week5/GMT_figure/July_rates_profile/July_rates_profile.jpeg", 
-       plot =  p, width = 6, height = 4)
+       plot =  p, width = 8, height = 4)
 
 
 
