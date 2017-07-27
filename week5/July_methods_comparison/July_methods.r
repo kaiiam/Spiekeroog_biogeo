@@ -82,7 +82,7 @@ july_plot <- ggplot(july_data, aes(Method, O2_rate_µM_h_corrected, fill = setup
 july_plot
 
 ggsave(filename = "/home/kai/Desktop/grad_school/marmic/lab_rotations/rotation_3/Spiekeroog_biogeo/week5/July_methods_comparison/July_methods_comparison.jpeg", 
-       plot =  july_plot, width = 6, height = 4)
+       plot =  july_plot, width = 5.5, height = 4)
 
 
 

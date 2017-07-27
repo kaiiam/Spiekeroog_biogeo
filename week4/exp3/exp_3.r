@@ -41,7 +41,9 @@ plot_beach_above_mwl<- beach_above_mwl %>%
   scale_y_continuous(expression(paste("Oxygen (μmol l"^"-1" *")" )), limits = c(0, 250)) +
   geom_smooth(data=beach_above_mwl_reg, se = FALSE, method = "lm") +
   ggtitle("Beach above Mean Water Line") + theme(plot.title = element_text(hjust = 0.5)) +
-  labs(colour ="Depth") + scale_colour_manual(values = c("#ecd240", "#ff8811", "#f12700", "#972e23"))
+  labs(colour ="Depth") + scale_colour_manual(values = c("#eee717", "#d2f800", "#5c9437", "#345700"))
+
+#values = c("#2A1D18", "#505346", "#6D7C71", "#848C7F")
 
 plot_lagoon<- lagoon %>%
   ggplot(aes(time.hours, oxygen, colour = depth)) +
@@ -51,7 +53,7 @@ plot_lagoon<- lagoon %>%
   scale_y_continuous(expression(paste("Oxygen (μmol l"^"-1" *")" )), limits = c(0, 250)) +
   geom_smooth(data= lagoon_reg, se = FALSE, method = "lm") +
   ggtitle("Lagoon") + theme(plot.title = element_text(hjust = 0.5)) +
-  labs(colour ="Depth") + scale_colour_manual(values = c("#ecd240", "#ff8811", "#f12700", "#972e23"))
+  labs(colour ="Depth") + scale_colour_manual(values = c("#eee717", "#d2f800", "#5c9437", "#345700"))
 
 plot_berm<- berm %>%
   ggplot(aes(time.hours, oxygen, colour = depth)) +
@@ -61,7 +63,7 @@ plot_berm<- berm %>%
   scale_y_continuous(expression(paste("Oxygen (μmol l"^"-1" *")" )), limits = c(0, 250)) +
   geom_smooth(data=berm_reg,se = FALSE, method = "lm") +
   ggtitle("Berm") + theme(plot.title = element_text(hjust = 0.5)) +
-  labs(colour ="Depth") + scale_colour_manual(values = c("#ecd240", "#ff8811", "#f12700", "#972e23"))
+  labs(colour ="Depth") + scale_colour_manual(values = c("#eee717", "#d2f800", "#5c9437", "#345700"))
 
 plot_low_water_line<- low_water_line %>%
   ggplot(aes(time.hours, oxygen, colour = depth)) +
@@ -71,7 +73,7 @@ plot_low_water_line<- low_water_line %>%
   scale_y_continuous(expression(paste("Oxygen (μmol l"^"-1" *")" )), limits = c(0, 250)) +
   geom_smooth(data= low_water_line_reg,se = FALSE, method = "lm") +
   ggtitle("Low Water Line") + theme(plot.title = element_text(hjust = 0.5)) +
-  labs(colour ="Depth") + scale_colour_manual(values = c("#ecd240", "#ff8811", "#f12700", "#972e23"))
+  labs(colour ="Depth") + scale_colour_manual(values = c("#eee717", "#d2f800", "#5c9437", "#345700"))
 
 #view plots
 plot(plot_beach_above_mwl)

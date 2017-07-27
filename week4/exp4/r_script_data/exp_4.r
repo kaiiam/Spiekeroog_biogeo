@@ -70,7 +70,7 @@ plot_station_8<- station8 %>%
   scale_y_continuous(expression(paste("Oxygen (μmol l"^"-1" *")" )), limits = c(0, 250)) +
   geom_smooth(se = FALSE, method = "lm") +
   ggtitle("Station 8") + theme(plot.title = element_text(hjust = 0.5)) +
-  labs(colour ="Depth") + scale_colour_manual(values = c("#c0e105", "#ecd240", "#ff8811", "#f12700", "#972e23"))
+  labs(colour ="Depth") + scale_colour_manual(values = c("#f0fd00", "#ecd240", "#ff8811", "#f12700", "#972e23"))
 
 #view plots
 plot(plot_station_2)

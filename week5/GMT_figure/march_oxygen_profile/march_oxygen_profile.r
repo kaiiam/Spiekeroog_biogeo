@@ -61,8 +61,8 @@ y.range <- as.numeric(c(min_y, max_y))  # min/max latitude of the interpolation 
 grd <- expand.grid(x = seq(from = x.range[1], to = x.range[2], by = 0.02),
                    y = seq(from = y.range[1], to = y.range[2], by = 0.00124))
 
-length(seq(from = x.range[1], to = x.range[2], by = 0.02))
-length(seq(from = y.range[1], to = y.range[2], by = 0.00124))
+#length(seq(from = x.range[1], to = x.range[2], by = 0.02))
+#length(seq(from = y.range[1], to = y.range[2], by = 0.00124))
 
 # expand points to grid
 coordinates(grd) <- ~x + y
@@ -75,6 +75,9 @@ coordinates(march_oxygen_profile_test) = ~x + y
 
 idw <- idw(formula = oxygen ~ 1, locations = march_oxygen_profile_test, 
            newdata = grd)  # apply idw model for the data
+
+# krige0 <- krige0(formula = oxygen ~ 1, data = march_oxygen_profile_test, 
+#           newdata = grd, model = vgm("Sph"))
 
 idw.output = as.data.frame(idw)  # output is defined as a data table
 names(idw.output)[1:3] <- c("long", "lat", "var1.pred")  # give names to the modelled variables
